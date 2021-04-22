@@ -1,20 +1,23 @@
-# https://flask-wtf.readthedocs.io/en/stable/quickstart.html
+import logging
 from flask import Blueprint, render_template, redirect, request
 from flask.helpers import flash, url_for
 from flask_wtf import FlaskForm
+import sqlalchemy
 from wtforms import StringField
 from wtforms.validators import DataRequired, Length, Regexp
 from flask_login import LoginManager, login_user
 
-from bankapp import models
+from bankapp import exceptions, models
+
+logger = logging.getLogger(__name__)
+login_manager = LoginManager()
 
 bp = Blueprint('account', __name__, template_folder='../../templates')
-login_manager = LoginManager()
 
 
 @login_manager.user_loader
 def load_user(user_id):
-    return models.User.get(user_id)
+    return models.User.query.filter_by(id=user_id).first()
 
 
 class UserForm(FlaskForm):
@@ -33,8 +36,16 @@ def register():
     form = UserForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            # TODO: register
-            user = models.User.create(form.username, form.password)
+            # register
+            user: models.User
+            try:
+                user = models.User.create(
+                    form.username.data, form.password.data)
+            except exceptions.UsernameTaken:
+                flash('The username is already taken.')
+                return render_template('register.html', form=form)
+
+            login_user(user)
             flash('Register success.')
             return redirect('/')
         else:
@@ -58,10 +69,18 @@ def login():
                     flash(f'{name} error: {msg}')
 
             return render_template('login.html', form=form)
-        # TODO: validate
-        user: models.User = models.User.try_from(form.username, form.password)
+
+        user: models.User
+        try:
+            user = models.User.try_from(
+                form.username.data, form.password.data
+            )
+        except exceptions.UserDoesNotExistOrWrongPassword:
+            flash('user does not exist or wrong password.')
+            return render_template('login.html', form=form)
 
         login_user(user)
+        logger.info(f'User {user.username} logined.')
         flash(f'Welcome, {user.username}')
         next = request.args.get('next')
         if not next or not is_safe_url(next):

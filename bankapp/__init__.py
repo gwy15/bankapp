@@ -1,9 +1,11 @@
 from bankapp import account, models
+from bankapp.logging import init_logging
 from flask import Flask, render_template
 from flask_login import login_required
 __version__ = '0.1.0'
 
 import logging
+init_logging()
 logger = logging.getLogger()
 
 
@@ -14,6 +16,7 @@ def initapp() -> Flask:
     app.config.from_pyfile('./config.local.py', silent=True)
 
     models.db.init_app(app)
+    models.bcrypt.init_app(app)
     account.login_manager.init_app(app)
 
     with app.app_context():

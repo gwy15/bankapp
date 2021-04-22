@@ -1,7 +1,15 @@
 # https://flask-sqlalchemy.palletsprojects.com/en/2.x/quickstart/
+from typing import Optional
+import logging
 from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
+import sqlalchemy
+from bankapp import exceptions
+
+logger = logging.getLogger(__name__)
 
 db: SQLAlchemy = SQLAlchemy()
+bcrypt = Bcrypt()
 
 
 class User(db.Model):
@@ -9,11 +17,27 @@ class User(db.Model):
     username = db.Column(db.String(24), unique=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
 
-    def create(self, username: str, password: str):
-        hashed: str
-        user = User(username=username, password=hashed)
-        db.session.add(user)
-        db.session.commit()
+    def create(username: str, password: str) -> 'User':
+        pw_hash = bcrypt.generate_password_hash(password)
+        try:
+            user = User(username=username, password=pw_hash)
+            db.session.add(user)
+            db.session.commit()
+        except sqlalchemy.exc.IntegrityError as ex:
+            db.session.rollback()
+            raise exceptions.UsernameTaken from ex
+        assert user.id > 0
+        logger.info(f'User {username} registered!')
+        return user
+
+    def try_from(username: str, password: str) -> Optional['User']:
+        user = User.query.filter_by(username=username).first()
+        if user is None:
+            raise exceptions.UserDoesNotExistOrWrongPassword()
+
+        if bcrypt.check_password_hash(user.password, password):
+            return user
+        raise exceptions.UserDoesNotExistOrWrongPassword()
 
     def __repr__(self) -> str:
         return f'<User {self.username}>'

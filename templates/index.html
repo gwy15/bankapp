@@ -3,6 +3,6 @@
 {% block body %}
 <h1> Welcome </h1>
 {% if current_user.is_authenticated %}
-Hi {{ current_user.name }}!
+Hi {{ current_user.username }}!
 {% endif %}
 {% endblock %}
