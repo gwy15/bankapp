@@ -2,6 +2,8 @@ from bankapp import account, models
 from bankapp.logging import init_logging
 from flask import Flask, render_template
 from flask_login import login_required
+from pathlib import Path
+
 __version__ = '0.1.0'
 
 import logging
@@ -10,7 +12,7 @@ logger = logging.getLogger()
 
 
 def initapp() -> Flask:
-    app = Flask(__name__, template_folder='../templates')
+    app = Flask(__name__, template_folder=str(Path('./templates').absolute()))
 
     app.config.from_pyfile('./config.py')
     app.config.from_pyfile('./config.local.py', silent=True)
@@ -24,13 +26,12 @@ def initapp() -> Flask:
 
     app.register_blueprint(account.bp)
 
+    @app.route('/')
+    @login_required
+    def index():
+        return render_template('index.html')
+
     return app
 
 
 app = initapp()
-
-
-@app.route('/')
-@login_required
-def index():
-    return render_template('index.html')

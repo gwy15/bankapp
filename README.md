@@ -33,5 +33,5 @@ poetry run flask run
 # Test
 To run unit-tests, run
 ```bash
-poetry run pytest tests
+poetry run pytest tests -v
 ```

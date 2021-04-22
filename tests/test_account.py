@@ -1,19 +1,26 @@
-import flask
-import pytest
-import bankapp
-
-
-@pytest.fixture
-def client():
-    bankapp.app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
-    bankapp.app.config['TESTING'] = True
-    with bankapp.app.test_client() as client:
-        with bankapp.app.app_context():
-            bankapp.models.db.init_app(bankapp.app)
-        client: flask.testing.FlaskClient
-        yield client
+from tests import *
 
 
 def test_index_with_no_login(client):
     r = client.get('/')
     assert b'login' in r.data
+
+
+def test_register_account():
+    for client in make_client(True):
+        r = client.post('/register', data={
+            'username': 'admin',
+            'password': 'password123'
+        })
+        assert b'CSRF token is missing' in r.data
+
+
+def test_register(client):
+    r = client.get('/register')
+    assert b'register' in r.data
+
+    r = client.post('/register', data={
+        'username': 'admin',
+        'password': 'password123'
+    })
+    assert b'Redirecting' in r.data
