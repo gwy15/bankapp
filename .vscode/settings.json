@@ -1,6 +1,7 @@
 {
     "cSpell.words": [
         "bcrypt",
+        "pytest",
         "wtforms"
     ],
     "python.pythonPath": "/Users/bytedance/Library/Caches/pypoetry/virtualenvs/bankapp-RJnjS4M--py3.9/bin/python"
