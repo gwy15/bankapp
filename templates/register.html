@@ -2,4 +2,12 @@
 
 {% block body %}
 <h1> register </h1>
+<form method="POST" action="/register">
+    {{ form.csrf_token }}
+    {{ form.username.label }} {{ form.username(size=20) }}
+    <br>
+    {{ form.password.label }} {{ form.password(size=20, type='password') }}
+    <br>
+    <input type="submit" value="Register">
+</form>
 {% endblock %}
