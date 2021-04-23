@@ -17,33 +17,62 @@
 
 }
 
+.btn {
+    display: inline-block;
+}
+
+.v-flex {
+    display       : flex;
+    flex-direction: column;
+}
+
+.flex.v-center {
+    align-items    : center;
+    justify-content: center;
+}
+
+.btn {
+    font-size: 25px;
+
+    border       : 1px gray round(2px);
+    border-radius: 4px;
+
+    min-width: 200px;
+    padding  : 12px 30px;
+    margin   : 30px 10px;
+}
+
+.dark-btn {
+    background-color: @red;
+    color           : @white;
+}
+
+button {
+    .btn();
+    .dark-btn();
+}
+
+
 // the login/register button
 form {
     margin    : auto;
     text-align: center;
     width     : 600px;
+    font-size : 25px;
 
     label {
-        font-size : 25px;
         min-width : 160px;
         text-align: right;
     }
 
-    input {
-        padding      : 10px 10px;
-        margin       : 30px 10px;
-        min-width    : 200px;
-        font-size    : 25px;
-        // round corner
-        border       : 1px gray round(2px);
-        border-radius: 4px;
+    input:not([type=submit]) {
+        .btn();
     }
 
-    input:not([type=submit]) {}
-
-    input[type=submit] {
-        background-color: @red;
-        color           : @white;
+    input[type=submit],
+    a.btn {
+        .btn();
+        .dark-btn();
     }
 }
 
@@ -60,6 +89,7 @@ body {
     #main-container {
         max-width : 960px;
         height    : 100%;
+        min-height: 100%;
         width     : 100%;
         padding   : 40px;
         box-sizing: border-box;
@@ -104,5 +134,24 @@ body {
     // main takes the rest space
     main {
         height: calc(100% - 80px);
+
+        .flashes {
+            margin   : 20px;
+            font-size: 24px;
+
+            .flash {
+                display      : block;
+                border       : 1px gray round(2px);
+                border-radius: 4px;
+
+                background-color: #dba1aa;
+
+                padding: 5px 20px;
+            }
+        }
+
+        #welcome-msg {
+            font-size: 36px;
+        }
     }
 }

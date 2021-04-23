@@ -10,7 +10,8 @@
         <br>
         {{ form.balance.label }} {{ form.balance(size=20) }}
         <br>
-        <input type="submit" value="Register">
+        <input type="submit" value="Create Account">
+        or <a class="btn" href="{{url_for('account.login')}}"> Go Login </a>
     </form>
 </div>
 {% endblock %}

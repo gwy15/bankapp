@@ -9,6 +9,7 @@
         {{ form.password.label }} {{ form.password(size=20, type='password') }}
         <br>
         <input type="submit" value="Login" class="centered">
+        or <a class="btn" href="{{url_for('account.register')}}"> Go Register </a>
     </form>
 </div>
 {% endblock %}

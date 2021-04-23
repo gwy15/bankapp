@@ -1,8 +1,18 @@
 {% extends "base.html" %}
 
 {% block body %}
-<h1> Welcome </h1>
-{% if current_user.is_authenticated %}
-Hi, {{ current_user.username }}!
-{% endif %}
+<div class="v-flex v-center fill-vertical">
+    <div class="centered" style="text-align: center;" id="welcome-msg">
+        <div> Welcome back </div>
+        {% if current_user.is_authenticated %}
+        <span>
+            {{ current_user.username }}
+        </span>
+        {% endif %}
+    </div>
+
+    <button class="centered">
+        View Account Transactions
+    </button>
+</div>
 {% endblock %}
