@@ -35,3 +35,6 @@ To run unit-tests, run
 ```bash
 poetry run pytest tests -v
 ```
+
+# TODO
+- [ ] finer background pattern

@@ -6,19 +6,29 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bank App</title>
+
+    <link rel="stylesheet/less" type="text/css" href="{{ url_for('static',filename='style.less') }}">
+    <script src="//cdn.jsdelivr.net/npm/less@3.13"></script>
 </head>
 
 <body>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <ul class="flashes">
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}
-    {% block body %} {% endblock body %}
+    <div id="main-container" class="centered">
+        {% include "navbar.html" %}
+
+        <main>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul class="flashes">
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+
+            {% block body %} {% endblock body %}
+        </main>
+    </div>
 </body>
 
 </html>

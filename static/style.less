@@ -1,0 +1,108 @@
+@top-red-bar-height: 15px;
+@nav-red-bar-height: 6px;
+@red               : #c71431;
+@white             : #e5e8e4;
+
+.centered {
+    margin: auto;
+}
+
+.fill-vertical {
+    height: 100%;
+}
+
+.child-vertical-centered {
+    display       : flex;
+    flex-direction: column;
+
+}
+
+// the login/register button
+form {
+    margin    : auto;
+    text-align: center;
+    width     : 600px;
+
+    label {
+        font-size : 25px;
+        min-width : 160px;
+        text-align: right;
+    }
+
+    input {
+        padding      : 10px 10px;
+        margin       : 30px 10px;
+        min-width    : 200px;
+        font-size    : 25px;
+        // round corner
+        border       : 1px gray round(2px);
+        border-radius: 4px;
+    }
+
+    input:not([type=submit]) {}
+
+    input[type=submit] {
+        background-color: @red;
+        color           : @white;
+    }
+}
+
+body {
+    margin: 0;
+
+    min-width : 100vw;
+    min-height: calc(100vh - @top-red-bar-height);
+    height    : calc(100vh - @top-red-bar-height);
+
+    border-top      : @top-red-bar-height solid @red;
+    background-image: url('/static/images/background.png');
+
+    #main-container {
+        max-width : 960px;
+        height    : 100%;
+        width     : 100%;
+        padding   : 40px;
+        box-sizing: border-box;
+
+        background-color: @white;
+    }
+
+    // nav bar is 80 px height, 
+    nav {
+        width : 100%;
+        height: 80px;
+
+        display       : flex;
+        flex-direction: row;
+
+        #logo {
+            display: block;
+            height : 70px;
+        }
+
+        #text {
+            display    : block;
+            height     : 100%;
+            margin-left: 2px;
+
+            #bank-name {
+                display  : block;
+                height   : 45px;
+                font-size: 43px;
+            }
+
+            #bank-city {
+                display  : block;
+                height   : 30px;
+                font-size: 15px;
+            }
+        }
+
+        border-bottom: @nav-red-bar-height solid @red;
+    }
+
+    // main takes the rest space
+    main {
+        height: calc(100% - 80px);
+    }
+}

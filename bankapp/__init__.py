@@ -12,7 +12,10 @@ logger = logging.getLogger()
 
 
 def createapp(with_db: bool = True) -> Flask:
-    app = Flask(__name__, template_folder=str(Path('./templates').absolute()))
+    app = Flask(__name__,
+                template_folder=str(Path('./templates').absolute()),
+                static_folder=str(Path('./static').absolute())
+                )
 
     app.config.from_pyfile('./config.py')
     app.config.from_pyfile('./config.local.py', silent=True)
