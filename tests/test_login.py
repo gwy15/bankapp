@@ -46,11 +46,11 @@ def test_login_with_improper_input(client):
     assert b'password error: This field is required.' in r.data
 
     r = client.post('/login', data={
-        'username': '1',
-        'password': '1'
+        'username': 'a' * 128,
+        'password': 'b' * 128
     })
-    assert b'username error: Field must be between 3 and 20 characters long.' in r.data
-    assert b'password error: Field must be between 9 and 36 characters long.' in r.data
+    assert b'username error: Field must be between 1 and 127 characters long.' in r.data
+    assert b'password error: Field must be between 1 and 127 characters long.' in r.data
 
     r = client.post('/login', data={
         'username': '~~~~~~',

@@ -19,10 +19,11 @@ def init_app(app: flask.Flask):
         db.create_all()
     bcrypt.init_app(app)
 
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(24), unique=True, nullable=False)
-    password = db.Column(db.String(80), nullable=False)
+    username = db.Column(db.String(127), unique=True, nullable=False)
+    password = db.Column(db.String(127), nullable=False)
 
     def create(username: str, password: str) -> 'User':
         pw_hash = bcrypt.generate_password_hash(password)

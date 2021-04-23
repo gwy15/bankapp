@@ -22,12 +22,12 @@ def load_user(user_id):
 
 class UserForm(FlaskForm):
     username = StringField('username', validators=[
-        DataRequired(), Length(min=3, max=20),
-        Regexp(r'[a-zA-Z0-9@\._\-]+')
+        DataRequired(), Length(min=1, max=127),
+        Regexp(r'[a-z0-9_\-\.]+')
     ])
     password = StringField('password', validators=[
-        DataRequired(), Length(min=9, max=36),
-        Regexp(r'[a-zA-Z0-9!@#$%\^&*\(\)\-_=\+]+')]
+        DataRequired(), Length(min=1, max=127),
+        Regexp(r'[a-z0-9_\-\.]+')]
     )
 
 
