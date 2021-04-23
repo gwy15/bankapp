@@ -27,8 +27,9 @@ def test_register_ok(client):
             'password': 'password123',
             'balance': balance
         }, follow_redirects=True)
-        assert b'Welcome back' in r.data
-        assert username.encode() in r.data
+        print(r.data)
+        assert 'Welcome back' in r.data.decode()
+        assert username in r.data.decode()
 
 
 def test_register_existing_account(client):
@@ -56,7 +57,7 @@ def test_register_with_improper_input(client):
     r = client.post('/register', data={})
     assert b'username error: This field is required.' in r.data
     assert b'password error: This field is required.' in r.data
-    assert b'balance error: This field is required.' in r.data
+    assert b'balance error: This number is invalid as currency amount.' in r.data
 
     r = client.post('/register', data={
         'username': 'a' * 128,

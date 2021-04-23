@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, redirect, request
 from flask.helpers import flash, url_for
 from flask_wtf import FlaskForm
 from wtforms import StringField, DecimalField
-from wtforms.validators import DataRequired, Length, Regexp, NumberRange
+from wtforms.validators import DataRequired, Length, Regexp
 from flask_login import LoginManager, login_user
 from decimal import Decimal
 
@@ -11,14 +11,23 @@ from bankapp.validators import DecimalValidator
 from bankapp import exceptions, models
 
 logger = logging.getLogger(__name__)
-login_manager = LoginManager()
 
-bp = Blueprint('account', __name__)
+# login manager
+login_manager = LoginManager()
 
 
 @login_manager.user_loader
 def load_user(user_id):
     return models.User.query.filter_by(id=user_id).first()
+
+
+@login_manager.unauthorized_handler
+def redirect_to_login():
+    return redirect(url_for('account.login'))
+
+
+# flask routers
+bp = Blueprint('account', __name__)
 
 
 class UserForm(FlaskForm):
@@ -33,8 +42,7 @@ class UserForm(FlaskForm):
 
 
 class RegisterForm(UserForm):
-    balance = StringField('balance', validators=[
-        DataRequired(),
+    balance = DecimalField('balance', validators=[
         DecimalValidator()
     ])
 
@@ -52,8 +60,7 @@ def register():
         try:
             user = models.User.create(
                 form.username.data, form.password.data,
-                # convert to cents
-                balance_cents=int(Decimal(form.balance.data) * 100)
+                balance=form.balance.data
             )
         except exceptions.UsernameTaken:
             flash('The username is already taken.')
@@ -100,11 +107,6 @@ def login():
         return redirect(next)
     else:
         return render_template('login.html', form=form)
-
-
-@login_manager.unauthorized_handler
-def redirect_to_login():
-    return redirect(url_for('account.login'))
 
 
 __ALL__ = ['bp']

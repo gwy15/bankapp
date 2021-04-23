@@ -4,11 +4,11 @@
 <div class="fill-vertical centered child-vertical-centered">
     <form method="POST" action="/register">
         {{ form.csrf_token }}
-        {{ form.username.label }} {{ form.username(size=20) }}
+        {{ form.username.label }} {{ form.username() }}
         <br>
-        {{ form.password.label }} {{ form.password(size=20, type='password') }}
+        {{ form.password.label }} {{ form.password(type='password') }}
         <br>
-        {{ form.balance.label }} {{ form.balance(size=20) }}
+        {{ form.balance.label }} {{ form.balance(type='number', step="0.01") }}
         <br>
         <input type="submit" value="Create Account">
         or <a class="btn" href="{{url_for('account.login')}}"> Go Login </a>

@@ -27,15 +27,15 @@ class User(db.Model):
     password = db.Column(db.String(127), nullable=False)
     balance_cents = db.Column(db.Integer, nullable=False)
 
-    def create(username: str, password: str, balance_cents: int) -> 'User':
-        if balance_cents < 0:
-            raise exceptions.NegativeBalance()
+    def create(username: str, password: str, balance: Decimal) -> 'User':
         pw_hash = bcrypt.generate_password_hash(password)
         try:
             user = User(
                 username=username, password=pw_hash,
-                balance_cents=balance_cents
+                balance_cents=0
             )
+            user.balance = balance
+
             db.session.add(user)
             db.session.commit()
         except sqlalchemy.exc.IntegrityError as ex:
@@ -66,6 +66,13 @@ class User(db.Model):
         if not isinstance(value, Decimal):
             raise ValueError(
                 f'Expected Decimal for balance, got {type(value)}.')
+        if value < 0:
+            raise exceptions.NegativeBalance()
+        if value > Decimal('4294967295.99'):
+            raise ValueError('The value is too big.')
+        if value.as_tuple().exponent <= -3:
+            raise ValueError('The decimal has too many digits.')
+
         self.balance_cents = int(value * 100)
 
     @property
