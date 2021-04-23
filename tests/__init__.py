@@ -1,9 +1,10 @@
 import flask
 import pytest
 import bankapp
+from typing import Generator
 
 
-def make_client(csrf: bool):
+def make_client(csrf: bool) -> Generator[flask.testing.FlaskClient, None, None]:
     app = bankapp.initapp()
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
     app.config['TESTING'] = True
@@ -12,11 +13,21 @@ def make_client(csrf: bool):
         with app.app_context():
             bankapp.models.db.init_app(app)
             bankapp.models.db.create_all()
+            bankapp.models.User.create('admin', 'adminpswd')
         client: flask.testing.FlaskClient
         yield client
 
 
 @pytest.fixture
-def client():
-    for c in make_client(csrf=False):
-        yield c
+def client() -> Generator[flask.testing.FlaskClient, None, None]:
+    for client in make_client(csrf=False):
+        yield client
+
+
+def login(client):
+    r = client.post('/login', data={
+        'username': 'admin',
+        'password': 'adminpswd'
+    })
+    assert b'Redirecting' in r.data
+    assert r.status_code == 302

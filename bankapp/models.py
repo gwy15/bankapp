@@ -27,7 +27,7 @@ class User(db.Model):
             db.session.rollback()
             raise exceptions.UsernameTaken from ex
         assert user.id > 0
-        logger.info(f'User {username} registered!')
+        logger.info(f'User {username} register success.')
         return user
 
     def try_from(username: str, password: str) -> Optional['User']:
