@@ -58,6 +58,17 @@ class User(db.Model):
         return f'<User {self.username}>'
 
     @property
+    def balance(self):
+        return Decimal(self.balance_cents) * Decimal('0.01')
+
+    @balance.setter
+    def balance(self, value: Decimal):
+        if not isinstance(value, Decimal):
+            raise ValueError(
+                f'Expected Decimal for balance, got {type(value)}.')
+        self.balance_cents = int(value * 100)
+
+    @property
     def is_authenticated(self):
         return True
 

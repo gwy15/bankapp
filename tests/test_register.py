@@ -27,7 +27,8 @@ def test_register_ok(client):
             'password': 'password123',
             'balance': balance
         }, follow_redirects=True)
-        assert f'Hi, {username}'.encode() in r.data
+        assert b'Welcome back' in r.data
+        assert username.encode() in r.data
 
 
 def test_register_existing_account(client):

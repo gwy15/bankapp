@@ -2,7 +2,7 @@
     <a href="{{url_for('index.index')}}">
         <img id="logo" src="{{url_for('static', filename='images/logo.png')}}" />
     </a>
-    <span id="text">
+    <span id="bank-info">
         <span id="bank-name">
             MAZE BANK
         </span>
@@ -10,4 +10,11 @@
             OF LOS SANTOS
         </span>
     </span>
+    <div style="flex-grow: 1"></div>
+    {% if current_user.is_authenticated %}
+    <span id="account-balance">
+        Account balance: ${{ current_user.balance }}
+    </span>
+    {% endif %}
+
 </nav>
