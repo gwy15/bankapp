@@ -6,7 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 import flask
 import sqlalchemy
-from bankapp import exceptions
+from bankapp import constants, exceptions
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +28,8 @@ class User(db.Model):
     balance_cents = db.Column(db.Integer, nullable=False)
 
     def create(username: str, password: str, balance: Decimal) -> 'User':
+        """Create the user with given parameters
+        """
         pw_hash = bcrypt.generate_password_hash(password)
         try:
             user = User(
@@ -45,7 +47,10 @@ class User(db.Model):
         logger.info(f'User {username} register success.')
         return user
 
-    def try_from(username: str, password: str) -> Optional['User']:
+    def try_from(username: str, password: str) -> 'User':
+        """Try retrieve an user from database with given username and
+        password. The given password is not hashed.
+        """
         user = User.query.filter_by(username=username).first()
         if user is None:
             raise exceptions.UserDoesNotExistOrWrongPassword()
@@ -53,6 +58,22 @@ class User(db.Model):
         if bcrypt.check_password_hash(user.password, password):
             return user
         raise exceptions.UserDoesNotExistOrWrongPassword()
+
+    def make_deposit(self, amount: Decimal):
+        self.balance += amount
+        if self.balance > constants.MAX_BALANCE:
+            db.session.rollback()
+            raise ValueError('The balance overflowed.')
+        db.session.flush([self])
+        db.session.commit()
+
+    def make_withdraw(self, amount: Decimal):
+        self.balance -= amount
+        if self.balance < 0:
+            db.session.rollback()
+            raise ValueError('The user does not have enough balance.')
+        db.session.flush([self])
+        db.session.commit()
 
     def __repr__(self) -> str:
         return f'<User {self.username}>'
@@ -68,7 +89,7 @@ class User(db.Model):
                 f'Expected Decimal for balance, got {type(value)}.')
         if value < 0:
             raise exceptions.NegativeBalance()
-        if value > Decimal('4294967295.99'):
+        if value > constants.MAX_BALANCE:
             raise ValueError('The value is too big.')
         if value.as_tuple().exponent <= -3:
             raise ValueError('The decimal has too many digits.')

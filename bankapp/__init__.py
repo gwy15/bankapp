@@ -1,14 +1,17 @@
-from bankapp import account, models, index
 from bankapp.logging import init_logging
+import logging
+from bankapp import account, models, index, transaction
 from flask import Flask
 from flask_login import login_required
 from pathlib import Path
 
+
 __version__ = '0.1.0'
 
-import logging
+
 init_logging()
-logger = logging.getLogger()
+
+logger = logging.getLogger(__name__)
 
 
 def createapp(with_db: bool = True) -> Flask:
@@ -26,6 +29,7 @@ def createapp(with_db: bool = True) -> Flask:
 
     app.register_blueprint(index.bp)
     app.register_blueprint(account.bp)
+    app.register_blueprint(transaction.bp)
 
     return app
 

@@ -38,3 +38,6 @@ poetry run pytest tests -v
 
 # TODO
 - [ ] finer background pattern
+
+# vulnerabilities
+- hint: next

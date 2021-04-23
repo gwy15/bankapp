@@ -1,3 +1,4 @@
+from bankapp import constants
 from decimal import Decimal
 import math
 import re
@@ -7,9 +8,10 @@ from wtforms.fields.core import DecimalField
 
 
 class DecimalValidator(object):
-    def __init__(self) -> None:
+    def __init__(self, min=0) -> None:
         super().__init__()
         self.message = 'This number is invalid as currency amount.'
+        self.min = min
 
     def __call__(self, form, field: DecimalField):
         value = field.data
@@ -21,6 +23,9 @@ class DecimalValidator(object):
         if not re.match(r'^[\d\.]+$', raw_data):
             raise ValidationError(self.message)
 
-        if value is None or math.isnan(value) or value < 0 or value > Decimal('4294967295.99') or \
+        if value is None or math.isnan(value) or value < 0 or value > constants.MAX_BALANCE or \
                 value.as_tuple().exponent <= -3:
+            raise ValidationError(self.message)
+
+        if value < self.min:
             raise ValidationError(self.message)

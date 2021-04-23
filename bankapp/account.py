@@ -80,33 +80,33 @@ def register():
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     form = UserForm()
-    if request.method == 'POST':
-        if not form.validate_on_submit():
-            for name, msgs in form.errors.items():
-                for msg in msgs:
-                    flash(f'{name} error: {msg}')
-
-            return render_template('login.html', form=form)
-
-        user: models.User
-        try:
-            user = models.User.try_from(
-                form.username.data, form.password.data
-            )
-        except exceptions.UserDoesNotExistOrWrongPassword:
-            flash('user does not exist or wrong password.')
-            return render_template('login.html', form=form)
-
-        login_user(user)
-        logger.info(f'User {user.username} logined.')
-        flash(f'Welcome, {user.username}')
-        next = request.args.get('next')
-        if not next:
-            next = url_for('index.index')
-
-        return redirect(next)
-    else:
+    if request.method == 'GET':
         return render_template('login.html', form=form)
+
+    if not form.validate_on_submit():
+        for name, msgs in form.errors.items():
+            for msg in msgs:
+                flash(f'{name} error: {msg}')
+
+        return render_template('login.html', form=form)
+
+    user: models.User
+    try:
+        user = models.User.try_from(
+            form.username.data, form.password.data
+        )
+    except exceptions.UserDoesNotExistOrWrongPassword:
+        flash('user does not exist or wrong password.')
+        return render_template('login.html', form=form)
+
+    login_user(user)
+    logger.info(f'User {user.username} logined.')
+    flash(f'Welcome, {user.username}')
+
+    next = request.args.get('next')
+    if not next:
+        next = url_for('index.index')
+    return redirect(next)
 
 
 __ALL__ = ['bp']

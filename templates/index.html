@@ -11,17 +11,17 @@
         {% endif %}
     </div>
 
-    <!-- TODO -->
     <div class="centered v-flex action-group">
-        <button class="index-actions">
+        <a class="btn dark-btn index-actions" href="{{url_for('transaction.deposit')}}">
             Deposit
-        </button>
-        <button class="index-actions">
+        </a>
+        <a class="btn dark-btn index-actions" href="{{url_for('transaction.withdraw')}}">
             Withdraw
-        </button>
-        <button class="index-actions">
+        </a>
+        <!-- TODO -->
+        <a class="btn dark-btn index-actions" href="/">
             Transaction Log
-        </button>
+        </a>
     </div>
 </div>
 {% endblock %}
