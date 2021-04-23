@@ -8,3 +8,7 @@ class UserDoesNotExistOrWrongPassword(BankException):
 
 class UsernameTaken(BankException):
     pass
+
+
+class NegativeBalance(BankException):
+    pass

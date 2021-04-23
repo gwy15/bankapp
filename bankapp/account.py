@@ -2,11 +2,12 @@ import logging
 from flask import Blueprint, render_template, redirect, request
 from flask.helpers import flash, url_for
 from flask_wtf import FlaskForm
-import sqlalchemy
-from wtforms import StringField
-from wtforms.validators import DataRequired, Length, Regexp
+from wtforms import StringField, DecimalField
+from wtforms.validators import DataRequired, Length, Regexp, NumberRange
 from flask_login import LoginManager, login_user
+from decimal import Decimal
 
+from bankapp.validators import DecimalValidator
 from bankapp import exceptions, models
 
 logger = logging.getLogger(__name__)
@@ -23,38 +24,49 @@ def load_user(user_id):
 class UserForm(FlaskForm):
     username = StringField('username', validators=[
         DataRequired(), Length(min=1, max=127),
-        Regexp(r'[a-z0-9_\-\.]+')
+        Regexp(r'^[a-z0-9_\-\.]+$')
     ])
     password = StringField('password', validators=[
         DataRequired(), Length(min=1, max=127),
-        Regexp(r'[a-z0-9_\-\.]+')]
+        Regexp(r'^[a-z0-9_\-\.]+$')]
     )
+
+
+class RegisterForm(UserForm):
+    balance = StringField('balance', validators=[
+        DataRequired(),
+        DecimalValidator()
+    ])
 
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
-    form = UserForm()
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            # register
-            user: models.User
-            try:
-                user = models.User.create(
-                    form.username.data, form.password.data)
-            except exceptions.UsernameTaken:
-                flash('The username is already taken.')
-                return render_template('register.html', form=form)
+    form = RegisterForm()
+    if request.method == 'GET':
+        return render_template('register.html', form=form)
 
-            login_user(user)
-            flash('Register success.')
-            return redirect('/')
-        else:
-            for name, msgs in form.errors.items():
-                for msg in msgs:
-                    flash(f'{name} error: {msg}')
-
+    # POST
+    if form.validate_on_submit():
+        # register
+        user: models.User
+        try:
+            user = models.User.create(
+                form.username.data, form.password.data,
+                # convert to cents
+                balance_cents=int(Decimal(form.balance.data) * 100)
+            )
+        except exceptions.UsernameTaken:
+            flash('The username is already taken.')
             return render_template('register.html', form=form)
+
+        login_user(user)
+        flash('Register success.')
+        return redirect('/')
     else:
+        for name, msgs in form.errors.items():
+            for msg in msgs:
+                flash(f'{name} error: {msg}')
+
         return render_template('register.html', form=form)
 
 

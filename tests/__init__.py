@@ -1,3 +1,4 @@
+from decimal import Decimal
 import flask
 import pytest
 import bankapp
@@ -12,7 +13,7 @@ def make_client(csrf: bool) -> Generator[flask.testing.FlaskClient, None, None]:
     with app.test_client() as client:
         with app.app_context():
             bankapp.models.init_app(app)
-            bankapp.models.User.create('admin', 'adminpswd')
+            bankapp.models.User.create('admin', 'adminpswd', 0)
         client: flask.testing.FlaskClient
         yield client
 

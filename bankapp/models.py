@@ -1,4 +1,5 @@
 # https://flask-sqlalchemy.palletsprojects.com/en/2.x/quickstart/
+from decimal import Decimal
 from typing import Optional
 import logging
 from flask_sqlalchemy import SQLAlchemy
@@ -10,7 +11,7 @@ from bankapp import exceptions
 logger = logging.getLogger(__name__)
 
 db: SQLAlchemy = SQLAlchemy()
-bcrypt = Bcrypt()
+bcrypt: Bcrypt = Bcrypt()
 
 
 def init_app(app: flask.Flask):
@@ -24,11 +25,17 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(127), unique=True, nullable=False)
     password = db.Column(db.String(127), nullable=False)
+    balance_cents = db.Column(db.Integer, nullable=False)
 
-    def create(username: str, password: str) -> 'User':
+    def create(username: str, password: str, balance_cents: int) -> 'User':
+        if balance_cents < 0:
+            raise exceptions.NegativeBalance()
         pw_hash = bcrypt.generate_password_hash(password)
         try:
-            user = User(username=username, password=pw_hash)
+            user = User(
+                username=username, password=pw_hash,
+                balance_cents=balance_cents
+            )
             db.session.add(user)
             db.session.commit()
         except sqlalchemy.exc.IntegrityError as ex:
