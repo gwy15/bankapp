@@ -12,7 +12,7 @@ from bankapp import exceptions, models
 logger = logging.getLogger(__name__)
 login_manager = LoginManager()
 
-bp = Blueprint('account', __name__, template_folder='../../templates')
+bp = Blueprint('account', __name__)
 
 
 @login_manager.user_loader
@@ -59,7 +59,6 @@ def register():
 
 
 @bp.route('/login', methods=['GET', 'POST'])
-@login_manager.unauthorized_handler
 def login():
     form = UserForm()
     if request.method == 'POST':
@@ -84,11 +83,16 @@ def login():
         flash(f'Welcome, {user.username}')
         next = request.args.get('next')
         if not next or not is_safe_url(next):
-            next = url_for('index')
+            next = url_for('index.index')
 
         return redirect(next)
     else:
         return render_template('login.html', form=form)
+
+
+@login_manager.unauthorized_handler
+def redirect_to_login():
+    return redirect(url_for('account.login'))
 
 
 __ALL__ = ['bp']

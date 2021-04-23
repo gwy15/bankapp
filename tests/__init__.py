@@ -5,14 +5,13 @@ from typing import Generator
 
 
 def make_client(csrf: bool) -> Generator[flask.testing.FlaskClient, None, None]:
-    app = bankapp.initapp()
+    app = bankapp.createapp(with_db=False)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
     app.config['TESTING'] = True
     app.config['WTF_CSRF_ENABLED'] = csrf
     with app.test_client() as client:
         with app.app_context():
-            bankapp.models.db.init_app(app)
-            bankapp.models.db.create_all()
+            bankapp.models.init_app(app)
             bankapp.models.User.create('admin', 'adminpswd')
         client: flask.testing.FlaskClient
         yield client

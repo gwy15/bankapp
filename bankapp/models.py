@@ -3,6 +3,7 @@ from typing import Optional
 import logging
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+import flask
 import sqlalchemy
 from bankapp import exceptions
 
@@ -11,6 +12,12 @@ logger = logging.getLogger(__name__)
 db: SQLAlchemy = SQLAlchemy()
 bcrypt = Bcrypt()
 
+
+def init_app(app: flask.Flask):
+    db.init_app(app)
+    with app.app_context():
+        db.create_all()
+    bcrypt.init_app(app)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
