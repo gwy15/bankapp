@@ -82,7 +82,7 @@ def login():
         logger.info(f'User {user.username} logined.')
         flash(f'Welcome, {user.username}')
         next = request.args.get('next')
-        if not next or not is_safe_url(next):
+        if not next:
             next = url_for('index.index')
 
         return redirect(next)
