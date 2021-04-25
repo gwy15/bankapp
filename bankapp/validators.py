@@ -1,20 +1,20 @@
-from bankapp import constants
-from decimal import Decimal
 import math
 import re
+from decimal import Decimal
 
 from wtforms.validators import ValidationError
 from wtforms.fields.core import DecimalField
 
+from bankapp import constants
 
-class DecimalValidator(object):
+class DecimalValidator:
     def __init__(self, min=0) -> None:
         super().__init__()
         self.message = 'This number is invalid as currency amount.'
         self.min = min
 
     def __call__(self, form, field: DecimalField):
-        value = field.data
+        value: Decimal = field.data
 
         if value is None:
             raise ValidationError(self.message)

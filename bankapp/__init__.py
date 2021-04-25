@@ -2,7 +2,6 @@ from bankapp.logging import init_logging
 import logging
 from bankapp import account, models, index, transaction
 from flask import Flask
-from flask_login import login_required
 from pathlib import Path
 
 

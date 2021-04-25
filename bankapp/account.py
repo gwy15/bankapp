@@ -1,11 +1,11 @@
 import logging
+from decimal import Decimal
 from flask import Blueprint, render_template, redirect, request
 from flask.helpers import flash, url_for
 from flask_wtf import FlaskForm
 from wtforms import StringField, DecimalField
 from wtforms.validators import DataRequired, Length, Regexp
 from flask_login import LoginManager, login_user
-from decimal import Decimal
 
 from bankapp.validators import DecimalValidator
 from bankapp import exceptions, models
@@ -37,8 +37,8 @@ class UserForm(FlaskForm):
     ])
     password = StringField('password', validators=[
         DataRequired(), Length(min=1, max=127),
-        Regexp(r'^[a-z0-9_\-\.]+$')]
-    )
+        Regexp(r'^[a-z0-9_\-\.]+$')
+    ])
 
 
 class RegisterForm(UserForm):

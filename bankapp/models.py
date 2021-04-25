@@ -27,6 +27,7 @@ class User(db.Model):
     password = db.Column(db.String(127), nullable=False)
     balance_cents = db.Column(db.Integer, nullable=False)
 
+    @staticmethod
     def create(username: str, password: str, balance: Decimal) -> 'User':
         """Create the user with given parameters
         """
@@ -47,6 +48,7 @@ class User(db.Model):
         logger.info(f'User {username} register success.')
         return user
 
+    @staticmethod
     def try_from(username: str, password: str) -> 'User':
         """Try retrieve an user from database with given username and
         password. The given password is not hashed.
