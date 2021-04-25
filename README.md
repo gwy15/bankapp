@@ -17,21 +17,19 @@ to setup your workspace:
 poetry install
 ```
 
-# Run
+# Developement
 
 For windows run the following command to run the app
 ```bash
-$env:FLASK_APP="bankapp"
-$env:FLASK_ENV="development"
 poetry run flask run
 ```
 
-For macos users, run these instead:
+For macos / linux users, run these instead:
 ```bash
-export FLASK_APP="bankapp"
-export FLASK_ENV="development"
 poetry run flask run
 ```
+
+This will launch the app in development mode and hot-reload will be enabled.
 
 # Test
 To run unit-tests, run
@@ -39,8 +37,20 @@ To run unit-tests, run
 poetry run pytest tests -v
 ```
 
+# Deployment
+On linux,
+```
+poetry run gunicorn bankapp:app
+```
+
+## ⚠️ Warning ⚠️
+- Do not use `flask run` for production.
+- This app is not designed to be run on Windows for production.
+- Before deployment, create a `config.local.py` in the directory.
+
 # TODO
 - [x] finer background pattern
 
 # vulnerabilities
 - hint: next
+- hint: secret
