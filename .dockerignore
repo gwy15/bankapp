@@ -1,0 +1,12 @@
+.git
+.github
+.vscode
+**.db
+*.egg-info
+logs
+tests
+Dockerfile
+.dockerignore
+.env
+.gitignore
+README.md

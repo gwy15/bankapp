@@ -2,7 +2,7 @@
 
 {% block body %}
 <div class="fill-vertical centered child-vertical-centered">
-    <form method="POST" action="/login">
+    <form method="POST" action="{{ url_for('account.login', next=next) }}">
         {{ form.csrf_token }}
         {{ form.username.label }} {{ form.username(size=20) }}
         <br>

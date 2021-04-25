@@ -1,4 +1,4 @@
-from bankapp.logging import init_logging
+from bankapp.logging_settings import init_logging
 import logging
 from bankapp import account, models, index, transaction
 from flask import Flask

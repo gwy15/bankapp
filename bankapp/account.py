@@ -23,7 +23,7 @@ def load_user(user_id):
 
 @login_manager.unauthorized_handler
 def redirect_to_login():
-    return redirect(url_for('account.login'))
+    return redirect(url_for('account.login', next=request.url))
 
 
 # flask routers
@@ -78,16 +78,20 @@ def register():
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
+    # get the 'next' param from url so that the user can jump back
+    next = request.args.get('next', default=url_for('index.index'))
+    logger.info('next = %s', next)
+
     form = UserForm()
     if request.method == 'GET':
-        return render_template('login.html', form=form)
+        return render_template('login.html', form=form, next=next)
 
     if not form.validate_on_submit():
         for name, msgs in form.errors.items():
             for msg in msgs:
                 flash(f'{name} error: {msg}')
 
-        return render_template('login.html', form=form)
+        return render_template('login.html', form=form, next=next)
 
     user: models.User
     try:
@@ -96,15 +100,13 @@ def login():
         )
     except exceptions.UserDoesNotExistOrWrongPassword:
         flash('user does not exist or wrong password.')
-        return render_template('login.html', form=form)
+        return render_template('login.html', form=form, next=next)
 
     login_user(user)
-    logger.info(f'User {user.username} logined.')
+    logger.info(f'User {user.username} login success.')
     flash(f'Welcome, {user.username}')
 
-    next = request.args.get('next')
-    if not next:
-        next = url_for('index.index')
+    logger.info('next = %s', next)
     return redirect(next)
 
 
