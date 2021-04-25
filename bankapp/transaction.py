@@ -73,3 +73,20 @@ def withdraw():
     current_user.make_withdraw(amount)
     flash('Withdraw success.')
     return render_template('withdraw.html', form=form)
+
+
+@bp.route('/transactions', methods=['GET'])
+@login_required
+def transactions():
+    trans = (models.TransactionRecord
+             .query
+             .filter(models.TransactionRecord.user_id == current_user.id)
+             .order_by(models.TransactionRecord.id.desc())
+             .limit(15)
+             .all()
+             )
+
+    return render_template(
+        'transactions.html',
+        transactions=trans
+    )

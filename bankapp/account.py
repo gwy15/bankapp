@@ -67,7 +67,6 @@ def register():
             return render_template('register.html', form=form)
 
         login_user(user)
-        flash('Register success.')
         return redirect('/')
     else:
         for name, msgs in form.errors.items():

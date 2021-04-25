@@ -1,7 +1,7 @@
-@top-red-bar-height: 15px;
+@top-red-bar-height: 10px;
 @nav-red-bar-height: 6px;
-@red               : #c71431;
-@white             : #e5e8e4;
+@red               : #e0232c;
+@white             : #e8e8e8;
 
 .centered {
     margin: auto;
@@ -82,17 +82,23 @@ body {
     height    : calc(100vh - @top-red-bar-height);
 
     border-top      : @top-red-bar-height solid @red;
-    background-image: url('/static/images/background.png');
+    background-image: url('/static/images/background.jpg');
+    background-size : 5%;
 
     #main-container {
-        max-width : 960px;
-        height    : 100%;
+        max-width : 720px;
         min-height: 100%;
         width     : 100%;
         padding   : 40px;
         box-sizing: border-box;
 
         background-color: @white;
+
+        // make items align in vertical center
+        display        : flex;
+        flex-direction : column;
+        align-items    : center;
+        justify-content: center;
     }
 
     // nav bar is 80 px height, 
@@ -114,15 +120,17 @@ body {
             margin-left: 2px;
 
             #bank-name {
-                display  : block;
-                height   : 45px;
-                font-size: 43px;
+                display    : block;
+                height     : 45px;
+                font-size  : 43px;
+                font-weight: 500;
             }
 
             #bank-city {
-                display  : block;
-                height   : 30px;
-                font-size: 15px;
+                display    : block;
+                height     : 30px;
+                font-size  : 15px;
+                margin-left: 2px;
             }
         }
 
@@ -137,9 +145,16 @@ body {
 
     // main takes the rest space
     main {
-        height: calc(100% - 80px);
+        flex-grow      : 1;
+        width          : 100%;
+        // align items in center
+        display        : flex;
+        flex-direction : column;
+        align-items    : center;
+        justify-content: center;
 
         .flashes {
+            width    : 100%;
             margin   : 20px;
             font-size: 24px;
 
@@ -160,6 +175,53 @@ body {
 
         .index-actions {
             width: 400px;
+        }
+
+        table {
+            width     : 100%;
+            margin-top: 20px;
+
+            border-spacing: 0 4px;
+
+            // table header
+            thead {
+                tr.head {
+                    th {
+                        height          : 60px;
+                        background-color: @red;
+                        color           : @white;
+                    }
+                }
+            }
+
+            tbody {
+                width           : 100%;
+                background-color: #dfa4a6;
+
+                tr {
+                    width : 100%;
+                    height: 36px;
+
+                    td {
+                        padding: 5px 20px;
+                    }
+
+                    td.transaction-amount {
+                        width     : 150px;
+                        text-align: right;
+                    }
+                }
+            }
+        }
+
+        table#balance {
+            border-collapse: collapse;
+
+            tr.balance {
+                background-color: #ffffff;
+                border-bottom   : 2px solid #999999;
+                border-top      : 2px solid #999999;
+            }
         }
     }
 }

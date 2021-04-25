@@ -142,3 +142,21 @@ class TransactionRecord(db.Model):
         )
         trans.user = user
         return trans
+
+    @property
+    def type(self):
+        if self.amount_cents > 0:
+            return 'Deposit'
+        return 'Withdraw'
+
+    @property
+    def amount(self) -> Decimal:
+        return Decimal(self.amount_cents) * Decimal('0.01')
+
+    @property
+    def deposit_amount(self) -> str:
+        return '$' + str(self.amount) if self.amount > 0 else ''
+
+    @property
+    def withdraw_amount(self) -> str:
+        return '-$' + str(abs(self.amount)) if self.amount < 0 else ''
