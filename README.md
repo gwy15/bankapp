@@ -1,3 +1,6 @@
+# Bankapp
+[![Test](https://github.com/gwy15/bankapp/actions/workflows/test.yml/badge.svg)](https://github.com/gwy15/bankapp/actions/workflows/test.yml)
+
 # Prepare Environment
 
 First, prepare your environment. You'll need python3.9 and poetry, which by the way is a 
