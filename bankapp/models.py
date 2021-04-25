@@ -26,6 +26,9 @@ class User(db.Model):
     username = db.Column(db.String(127), unique=True, nullable=False)
     password = db.Column(db.String(127), nullable=False)
     balance_cents = db.Column(db.Integer, nullable=False)
+    # one-to-many
+    transactions = db.relationship(
+        'TransactionRecord', backref='user', lazy=True)
 
     @staticmethod
     def create(username: str, password: str, balance: Decimal) -> 'User':
@@ -38,8 +41,12 @@ class User(db.Model):
                 balance_cents=0
             )
             user.balance = balance
-
             db.session.add(user)
+
+            # add transaction record
+            trans = TransactionRecord.new(user, balance)
+            db.session.add(trans)
+
             db.session.commit()
         except sqlalchemy.exc.IntegrityError as ex:
             db.session.rollback()
@@ -67,6 +74,7 @@ class User(db.Model):
             db.session.rollback()
             raise ValueError('The balance overflowed.')
         db.session.flush([self])
+        db.session.add(TransactionRecord.new(self, amount))
         db.session.commit()
 
     def make_withdraw(self, amount: Decimal):
@@ -75,6 +83,7 @@ class User(db.Model):
             db.session.rollback()
             raise ValueError('The user does not have enough balance.')
         db.session.flush([self])
+        db.session.add(TransactionRecord.new(self, -amount))
         db.session.commit()
 
     def __repr__(self) -> str:
@@ -112,3 +121,24 @@ class User(db.Model):
 
     def get_id(self):
         return str(self.id)
+
+
+class TransactionRecord(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    # foreign key to user
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    amount_cents = db.Column(db.Integer, nullable=False)
+    after_amount_cents = db.Column(db.Integer, nullable=False)
+
+    # user: User
+
+    @staticmethod
+    def new(user: User, amount: Decimal) -> 'TransactionRecord':
+        after_amount = user.balance + amount
+        trans = TransactionRecord(
+            amount_cents=int(amount * 100),
+            after_amount_cents=int(after_amount * 100)
+        )
+        trans.user = user
+        return trans
