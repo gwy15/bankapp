@@ -1,0 +1,19 @@
+name: Test
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+      - uses: Gr1N/setup-poetry@v4
+      - name: Print poetry version
+        run: poetry --version
+      - name: Setup environment
+        run: poetry install
+      - name: Run tests
+        run: poetry run pytest tests -v
