@@ -1,6 +1,9 @@
 name: Build Docker
 
-on: [push, release]
+on:
+  push:
+  release:
+    types: [published]
 
 jobs:
   build:
@@ -14,6 +17,6 @@ jobs:
       - name: Docker push
         if: ${{ github.event_name == 'release' }}
         run: |
-          docker tag bankapp:${GITHUB_SHA} ccr.ccs.tencentyun.com/gwy15/bankapp:${GITHUB_REF}
+          docker tag bankapp:${GITHUB_SHA} ccr.ccs.tencentyun.com/gwy15/bankapp:${GITHUB_REF##*/}
           docker login --username=${{secrets.docker_user}} ccr.ccs.tencentyun.com/gwy15/gwy15 -p ${{ secrets.docker_pswd }}
-          docker push ccr.ccs.tencentyun.com/gwy15/bankapp:${GITHUB_REF}
+          docker push ccr.ccs.tencentyun.com/gwy15/bankapp:${GITHUB_REF##*/}
