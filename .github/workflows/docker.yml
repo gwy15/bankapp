@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Docker build
-        run: docker built . -t ccr.ccs.tencentyun.com/gwy15/bankapp:${GITHUB_REF}
+        run: docker build . -t ccr.ccs.tencentyun.com/gwy15/bankapp:${GITHUB_REF}
       - name: Setup docker mirror
         if: ${{ github.event == 'release' }}
         run: docker login --username=${{secrets.docker_user}} ccr.ccs.tencentyun.com/gwy15/gwy15 -p ${{ secrets.docker_pswd }}
