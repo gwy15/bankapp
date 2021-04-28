@@ -1,5 +1,6 @@
 # Bankapp
 [![Test](https://github.com/gwy15/bankapp/actions/workflows/test.yml/badge.svg)](https://github.com/gwy15/bankapp/actions/workflows/test.yml)
+[![Build Docker](https://github.com/gwy15/bankapp/actions/workflows/docker.yml/badge.svg)](https://github.com/gwy15/bankapp/actions/workflows/docker.yml)
 
 The bankapp is a web app that is built on flask web framework. It is developed as the project for course SWE-266 (Software Security and Dependability).
 

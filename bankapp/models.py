@@ -15,10 +15,10 @@ bcrypt: Bcrypt = Bcrypt()
 
 
 def init_app(app: flask.Flask):
+    bcrypt.init_app(app)
     db.init_app(app)
     with app.app_context():
         db.create_all()
-    bcrypt.init_app(app)
 
 
 class User(db.Model):
