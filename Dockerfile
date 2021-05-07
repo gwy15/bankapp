@@ -18,4 +18,4 @@ RUN . $HOME/.poetry/env \
 
 WORKDIR /code
 ENTRYPOINT [ "/root/.poetry/bin/poetry", "run" ]
-CMD [ "gunicorn", "bankapp:app", "--bind", "0.0.0.0:80", "-w", "8" ]
+CMD [ "gunicorn", "bankapp:app", "--bind", "0.0.0.0:80" ]

@@ -16,8 +16,12 @@ in your browser.
 
 # Prepare Environment
 
-First, prepare your environment. You'll need python3.9 and poetry, which by the way is a 
+First, prepare your environment. You'll need **python 3.9** and **poetry**, which by the way is a 
 nice tool to manage python project, installed on your computer.
+
+> Please note that this app works on python 3.9 exclusively. It can work on 3.8, maybe, but I'm too lazy to adapt.
+> 
+> If you have problem installing python 3.9 due to multiple version collision, please see the [Docker](https://github.com/gwy15/bankapp#develop-in-docker) section below.
 
 I'll skip installing python3.9. You can find the instructions to install poetry [here].
 
@@ -62,12 +66,24 @@ to start the app in development mode.
 - Before deployment, create a `config.local.py` beside `config.py`. You should overwrite the `SECRET_KEY` value to a strong, random generated secret.
 
 
-# Develop by Docker
+# Develop in Docker
 Build the docker image:
 ```
 docker build . -t bankapp
 ```
-Run the docker image:
+
+Run the docker image for development (on Windows the line break may not work):
+```bash 
+docker run -it --rm \
+    -p 5000:5000 \
+    -e FLASK_APP=bankapp \
+    -e FLASK_ENV=development \
+    bankapp \
+    flask run -h 0.0.0.0
+```
+Visit http://127.0.0.1:5000/ to start the app.
+
+Run the docker image for production:
 ```
 docker run -it --rm -p 80:80 bankapp
 ```
