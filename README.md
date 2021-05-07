@@ -21,7 +21,7 @@ nice tool to manage python project, installed on your computer.
 
 > Please note that this app works on python 3.9 exclusively. It can work on 3.8, maybe, but I'm too lazy to adapt.
 > 
-> If you have problem installing python 3.9 due to multiple version collision, please see the [Docker](https://github.com/gwy15/bankapp#develop-in-docker) section below.
+> If you have problem installing python 3.9 due to multiple versions collision, please see the [Docker](https://github.com/gwy15/bankapp#develop-in-docker) section below.
 
 I'll skip installing python3.9. You can find the instructions to install poetry [here].
 
