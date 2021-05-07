@@ -14,6 +14,8 @@ The app supports the following functions
 Please note that currently it does not support logout. You might wanna use the Incognito Window feature
 in your browser.
 
+A demo of bankapp is hosted in https://bankapp.gwy15.com.
+
 # Prepare Environment
 
 First, prepare your environment. You'll need **python 3.9** and **poetry**, which by the way is a 
