@@ -43,21 +43,21 @@ def test_register_existing_account(client):
 
 def test_register_with_illegal_balance(client):
     illegal_balances = ['-10', '-0.1', '4294967296',
-                        '1.123', '1e1', '0x2', '0.0000', ]
+                        '1.123', '1e1', '0x2', '0.0000', '1.1.1' ]
     for balance in illegal_balances:
         r = client.post('/register', data={
             'username': f'guest_{balance}',
             'password': 'password123',
             'balance': balance
         }, follow_redirects=True)
-        assert b'balance error: This number is invalid as currency amount' in r.data, balance
+        assert b'balance error: This input is invalid as currency amount' in r.data, balance
 
 
 def test_register_with_improper_input(client):
     r = client.post('/register', data={})
     assert b'username error: This field is required.' in r.data
     assert b'password error: This field is required.' in r.data
-    assert b'balance error: This number is invalid as currency amount.' in r.data
+    assert b'balance error: This input is invalid as currency amount.' in r.data
 
     r = client.post('/register', data={
         'username': 'a' * 128,

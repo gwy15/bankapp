@@ -30,21 +30,16 @@ to setup your workspace:
 poetry install
 ```
 
-# Developement
+# Development
 
-For windows run the following command to run the app
-```bash
+Run the following command to run the app
+```
 poetry run flask run
 ```
 
-For macos / linux users, run these instead:
-```bash
-poetry run flask run
-```
+Visit http://127.0.0.1:5000/ to start the app.
 
 This will launch the app in development mode and hot-reload will be enabled.
-
-Visit http://127.0.0.1:5000/.
 
 # Test
 To run unit-tests, run
@@ -53,17 +48,21 @@ poetry run pytest tests -v
 ```
 
 # Deployment
-On linux,
+The bankapp only supports deployment on Linux.
+
+On linux, run
 ```
 poetry run gunicorn bankapp:app
 ```
+to start the app in development mode.
 
 ## ⚠️ Warning ⚠️
 - Do not use `flask run` for production.
 - This app is not designed to be run on Windows for production.
-- Before deployment, create a `config.local.py` in the directory.
+- Before deployment, create a `config.local.py` beside `config.py`. You should overwrite the `SECRET_KEY` value to a strong, random generated secret.
 
-# Running in Docker
+
+# Develop by Docker
 Build the docker image:
 ```
 docker build . -t bankapp
@@ -72,14 +71,3 @@ Run the docker image:
 ```
 docker run -it --rm -p 80:80 bankapp
 ```
-
-# TODO
-- [x] finer background pattern
-
-# Vulnerabilities
-- hint: next
-    - aHR0cDovLzEyNy4wLjAuMTo1MDAwL2xvZ2luP25leHQ9aHR0cCUzQSUyRiUyRmZha2UuY29t
-    - Y2FuIGp1bXAgdG8gYSBmYWtlIHdlYnNpdGUgdGhhdCBzYXlzICJ3cm9uZyBwYXNzd29yZCwgdHJ5IGFnYWluIiBhbmQgZ2V0IHlvdXIgcHN3ZA==
-- hint: forget something?
-    - dGhlIGRvY2tlciBpbWFnZSBkaWRudCBzZXQgYSBuZXcgc2VjcmV0IQ==
-    - eW91IGNhbiBtYWtlIGEgY29va2llIHdpdGggdGhlIGRlZmF1bHQgc2VjcmV0IHRvIGZha2UgYXMgYW55IHVzZXI=

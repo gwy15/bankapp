@@ -32,12 +32,14 @@ bp = Blueprint('account', __name__)
 
 class UserForm(FlaskForm):
     username = StringField('username', validators=[
-        DataRequired(), Length(min=1, max=127),
-        Regexp(r'^[a-z0-9_\-\.]+$')
+        DataRequired(),              # not empty
+        Length(min=1, max=127),      # length range
+        Regexp(r'^[a-z0-9_\-\.]+$')  # match regexp
     ])
     password = StringField('password', validators=[
-        DataRequired(), Length(min=1, max=127),
-        Regexp(r'^[a-z0-9_\-\.]+$')
+        DataRequired(),              # basically the password
+        Length(min=1, max=127),      # has the same constraints
+        Regexp(r'^[a-z0-9_\-\.]+$')  # as the username
     ])
 
 

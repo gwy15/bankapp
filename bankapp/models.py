@@ -1,4 +1,13 @@
-# https://flask-sqlalchemy.palletsprojects.com/en/2.x/quickstart/
+"""
+The module for access database.
+
+This module handles data access with database, which should be a SQL database.
+By default the bankapp will use a SQLite database named 'bankapp.db' use by
+setting `SQLALCHEMY_DATABASE_URI` in config, it can also use other databases
+like MySQL, MariaDB or PostgreSQL.
+
+Internally the model provides two ORM classes: `User` and `TransactionRecord`.
+"""
 from decimal import Decimal
 from typing import Optional
 import logging
@@ -32,7 +41,9 @@ class User(db.Model):
 
     @staticmethod
     def create(username: str, password: str, balance: Decimal) -> 'User':
-        """Create the user with given parameters
+        """Create the user with given parameters.
+
+        The input parameters must always be valid.
         """
         pw_hash = bcrypt.generate_password_hash(password)
         try:
@@ -48,9 +59,14 @@ class User(db.Model):
             db.session.add(trans)
 
             db.session.commit()
+
         except sqlalchemy.exc.IntegrityError as ex:
+            # there's a unique constraint on the `username` field so if username
+            # collides this exception will be raised. This guarantees that
+            # no two users will have the same username.
             db.session.rollback()
             raise exceptions.UsernameTaken from ex
+
         assert user.id > 0
         logger.info(f'User {username} register success.')
         return user
