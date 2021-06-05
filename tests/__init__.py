@@ -1,11 +1,12 @@
 from decimal import Decimal
 import flask
+from flask.testing import FlaskClient as Client
 import pytest
 import bankapp
 from typing import Generator
 
 
-def make_client(csrf: bool) -> Generator[flask.testing.FlaskClient, None, None]:
+def make_client(csrf: bool) -> Generator[Client, None, None]:
     app = bankapp.createapp(with_db=False)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
     app.config['TESTING'] = True
@@ -14,12 +15,12 @@ def make_client(csrf: bool) -> Generator[flask.testing.FlaskClient, None, None]:
         with app.app_context():
             bankapp.models.init_app(app)
             bankapp.models.User.create('admin', 'adminpswd', Decimal(0))
-        client: flask.testing.FlaskClient
+        client: Client
         yield client
 
 
 @pytest.fixture
-def client() -> Generator[flask.testing.FlaskClient, None, None]:
+def client() -> Generator[Client, None, None]:
     for client in make_client(csrf=False):
         yield client
 

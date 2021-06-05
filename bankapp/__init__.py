@@ -19,8 +19,8 @@ def createapp(with_db: bool = True) -> Flask:
                 static_folder=str(Path('./static').absolute())
                 )
 
-    app.config.from_pyfile('./config.local.py', silent=True)
     app.config.from_pyfile('./config.py')
+    app.config.from_pyfile('./config.local.py', silent=True)
 
     if with_db:
         models.init_app(app)

@@ -1,5 +1,6 @@
 import logging
 from decimal import Decimal
+import flask
 from flask import Blueprint, render_template, redirect, request
 from flask.helpers import flash, url_for
 from flask_wtf import FlaskForm
@@ -9,6 +10,7 @@ from flask_login import LoginManager, login_user
 
 from bankapp.validators import DecimalValidator
 from bankapp import exceptions, models
+from bankapp.utils import is_safe_url
 
 logger = logging.getLogger(__name__)
 
@@ -83,6 +85,9 @@ def login():
     # get the 'next' param from url so that the user can jump back
     next = request.args.get('next', default=url_for('index.index'))
     logger.info('next = %s', next)
+    # check the next is valid and safe
+    if not is_safe_url(next):
+        return flask.abort(400)
 
     form = UserForm()
     if request.method == 'GET':
